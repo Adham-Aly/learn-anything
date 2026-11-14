@@ -1,0 +1,240 @@
+<!doctype html>
+<!--
+  Markup reference for a learn-anything guide. Read it for the building blocks,
+  then write your own file from scratch. The prose in here describes each block;
+  none of it, and none of this outline, belongs in a real guide.
+
+  What the stylesheet and the renderer rely on:
+
+  - guide.css and guide.js sit in the same folder as the HTML file.
+  - <title> becomes the PDF title and the footer on every page. Keep it short.
+  - <html data-accent="..."> picks the one accent colour: teal, plum, forest or
+    slate. Leave the attribute off for blue. <html data-paper="letter"> switches
+    from A4 to US Letter.
+  - One <h1>, on the cover. Chapters are <section class="chapter" id="..."> opening
+    with an <h2>; sections inside them are <h3>; <h4> is for the rare sub-point.
+    These headings become the PDF's bookmarks.
+  - Chapters start on a new page. For a guide of roughly ten pages or fewer, put
+    class="continuous" on <body> and they follow one another instead.
+  - Numbers are typed by hand (chapter labels, "Figure 2", "Table 1", source
+    numbers) so that the text can refer to them.
+  - Every id is unique and every href="#..." points at one.
+  - Inside <pre>, write & < > as &amp; &lt; &gt;.
+  - Maths is \( inline \) or \[ display \]. A lone $ is left alone, so prices stay prices.
+  - Code lines of 76 characters or fewer fit without wrapping.
+  - No emoji: they print differently on every machine.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Guide title</title>
+  <link rel="stylesheet" href="guide.css">
+  <script src="guide.js" defer></script>
+</head>
+<body>
+
+<header class="cover">
+  <p class="kicker">What kind of guide this is</p>
+  <h1>The title names the thing being learned</h1>
+  <p class="subtitle">One sentence promising what the reader will be able to do or understand by the last page.</p>
+  <dl class="meta">
+    <div><dt>Written for</dt><dd>The reader from the brief: what they already know and what is new to them.</dd></div>
+    <div><dt>By the end</dt><dd>The outcome agreed in the brief, in plain words.</dd></div>
+    <div><dt>Covers</dt><dd>Scope in one line. For software, the exact versions.</dd></div>
+    <div><dt>Researched</dt><dd>The date the sources were checked.</dd></div>
+  </dl>
+</header>
+
+<nav class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><span class="n">1</span><a href="#structure">Structure</a><span class="about">One line per chapter saying what the reader gets from it. Page numbers are filled in when the PDF is rendered.</span></li>
+    <li><span class="n">2</span><a href="#code">Code</a><span class="about">Listings, changed lines, terminal sessions.</span></li>
+    <li><span class="n">3</span><a href="#showing">Figures, tables and maths</a><span class="about">Diagrams drawn by hand or by Mermaid, tables, formulas, layouts.</span></li>
+    <li><span class="n">4</span><a href="#back-matter">Back matter</a><span class="about">Practice, glossary, sources.</span></li>
+  </ol>
+</nav>
+
+<section class="chapter" id="structure">
+  <h2><span class="num">Chapter 1</span> Structure</h2>
+  <p class="lede">An optional lede: the question this chapter answers, in a sentence. Leave it out rather than fill it with an announcement of what the chapter will cover.</p>
+
+  <p>Body text is set in a serif at a comfortable reading size. A term is marked with <dfn>dfn</dfn> at the point where it is defined, which sets it in bold, and nowhere else. Ordinary emphasis is <em>em</em>; <strong>strong</strong> is for the few words a skimming reader must not miss.</p>
+
+  <h3 id="sections"><span class="num">1.1</span> Sections</h3>
+  <p>A section heading may carry a label such as <code>1.1</code> or <code>Step 4</code> in a <code>span class="num"</code>, or no label at all. Number sections only when the text refers to them by number.</p>
+
+  <h4>A sub-point</h4>
+  <p>The smallest heading. If a guide needs many of these, the sections are probably too large.</p>
+
+  <h3 id="callouts"><span class="num">1.2</span> Callouts</h3>
+  <p>Callouts lift a short passage out of the flow. They only work when they are rare: a page with three of them has no main text left. Each kind has a default label, and <code>data-label</code> replaces it.</p>
+
+  <aside class="callout key">
+    <p>The one idea the reader should still hold a month from now. At most one per section.</p>
+  </aside>
+
+  <aside class="callout note">
+    <p>Something true and useful that would interrupt the main line: a version caveat, a reminder of a prerequisite, a pointer.</p>
+  </aside>
+
+  <aside class="callout warn">
+    <p>A mistake people really make, or a belief that feels right and is wrong. Say what goes wrong and what to do instead.</p>
+  </aside>
+
+  <aside class="callout deeper">
+    <p>Detail that some readers want and the rest can skip without losing the thread.</p>
+  </aside>
+
+  <aside class="callout try" data-label="Check yourself">
+    <p>A question or small task that makes the reader use the idea just explained. Answers go at the back (see <a href="#answers">Answers</a>).</p>
+  </aside>
+</section>
+
+<section class="chapter" id="code">
+  <h2><span class="num">Chapter 2</span> Code</h2>
+
+  <p>Inline code such as <code>app.listen(3000)</code> sits in the sentence. A block names its language with <code>class="language-…"</code> and is highlighted when the page renders.</p>
+
+  <pre><code class="language-python">def mean(values):
+    """Average of a non-empty list."""
+    return sum(values) / len(values)</code></pre>
+
+  <p>Wrap a block in <code>figure class="code"</code> to give it a filename. When a listing grows from one step to the next, wrap the new or changed lines in <code>mark</code> and they are shaded, so the reader sees what this step added.</p>
+
+  <figure class="code">
+    <figcaption>src/server.js</figcaption>
+    <pre><code class="language-js">import express from 'express';
+
+const app = express();
+<mark>app.use(express.json());
+
+app.get('/health', (req, res) =&gt; {
+  res.json({ ok: true });
+});</mark>
+
+app.listen(3000);</code></pre>
+  </figure>
+
+  <p>A terminal session uses <code>pre class="terminal"</code> and no language. Lines that begin with <code>$</code> and a space are commands; everything else is the output the reader should expect to see.</p>
+
+  <pre class="terminal"><code>$ node src/server.js
+Listening on http://localhost:3000
+$ curl localhost:3000/health
+{"ok":true}</code></pre>
+</section>
+
+<section class="chapter" id="showing">
+  <h2><span class="num">Chapter 3</span> Figures, tables and maths</h2>
+
+  <h3 id="svg">Diagrams drawn by hand</h3>
+  <p>Inline SVG gives full control. Draw on a canvas about 560 units wide, cropped close to the drawing: one unit is then one pixel on the page, and 12-unit text matches the captions. The <code>d-</code> classes supply the guide's colours, and <code>url(#arrow)</code> is an arrowhead that takes the colour of its line.</p>
+
+  <figure>
+    <svg viewBox="0 0 560 100" width="560" role="img" aria-label="Three boxes joined by arrows, showing the diagram styles">
+      <rect class="d-box" x="4" y="4" width="132" height="52" rx="4"/>
+      <text class="d-strong" x="70" y="27" text-anchor="middle">d-box</text>
+      <text class="d-small d-muted" x="70" y="43" text-anchor="middle">a neutral part</text>
+
+      <path class="d-line" d="M136 30H206" marker-end="url(#arrow)"/>
+      <text class="d-small d-muted" x="171" y="22" text-anchor="middle">d-line</text>
+
+      <rect class="d-box d-accent" x="212" y="4" width="136" height="52" rx="4"/>
+      <text class="d-strong d-accent" x="280" y="27" text-anchor="middle">d-box d-accent</text>
+      <text class="d-small d-muted" x="280" y="43" text-anchor="middle">where to look</text>
+
+      <path class="d-line d-accent" d="M348 30H418" marker-end="url(#arrow)"/>
+      <text class="d-small d-accent" x="383" y="22" text-anchor="middle">d-accent</text>
+
+      <rect class="d-box d-dashed" x="424" y="4" width="132" height="52" rx="4"/>
+      <text class="d-strong" x="490" y="27" text-anchor="middle">d-dashed</text>
+      <text class="d-small d-muted" x="490" y="43" text-anchor="middle">optional or implied</text>
+
+      <path class="d-line d-dashed" d="M490 56V80H70V62" marker-end="url(#arrow)"/>
+      <text class="d-small d-muted" x="280" y="95" text-anchor="middle">a path can turn corners: M490 56 V80 H70 V62</text>
+    </svg>
+    <figcaption><b>Figure 1.</b> The caption says what to notice, not just what the picture is.</figcaption>
+  </figure>
+
+  <h3 id="mermaid">Diagrams laid out for you</h3>
+  <p>For flowcharts, sequence diagrams and state machines, Mermaid does the layout. Put the source in <code>pre class="mermaid"</code>, with <code>&lt;</code> written as <code>&amp;lt;</code>.</p>
+
+  <figure>
+    <pre class="mermaid">
+sequenceDiagram
+  participant R as Reader
+  participant G as Guide
+  R->>G: opens a chapter
+  G-->>R: one new idea
+  R->>G: tries it
+  G-->>R: the next idea
+    </pre>
+    <figcaption><b>Figure 2.</b> Use a diagram when the idea has a shape: a flow, a structure, a sequence in time.</figcaption>
+  </figure>
+
+  <h3 id="tables">Tables</h3>
+  <p>A table is for looking things up or comparing along the same few dimensions. Keep cells short; if a cell needs a paragraph, it wants to be prose.</p>
+
+  <table>
+    <caption><b>Table 1.</b> The callout kinds and their default labels.</caption>
+    <thead>
+      <tr><th>Class</th><th>Default label</th><th>Use it for</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>key</code></td><td>Key idea</td><td>The point of the section</td></tr>
+      <tr><td><code>note</code></td><td>Note</td><td>A useful aside</td></tr>
+      <tr><td><code>warn</code></td><td>Common mistake</td><td>A real pitfall or misconception</td></tr>
+      <tr><td><code>deeper</code></td><td>Going deeper</td><td>Skippable detail</td></tr>
+      <tr><td><code>try</code></td><td>Try it</td><td>A question or task for the reader</td></tr>
+    </tbody>
+  </table>
+
+  <h3 id="maths">Maths</h3>
+  <p>Inline maths such as \( \bar{x} = \frac{1}{n} \sum_{i=1}^{n} x_i \) sits in the sentence. A formula the reader will come back to gets its own line, and a tag if the text refers to it:</p>
+
+  \[ s^2 = \frac{1}{n-1} \sum_{i=1}^{n} (x_i - \bar{x})^2 \tag{1} \]
+
+  <h3 id="layouts">Steps and side-by-side</h3>
+  <p>A procedure the reader carries out in order is an <code>ol class="steps"</code>:</p>
+
+  <ol class="steps">
+    <li>Each step is one action, stated as an instruction.</li>
+    <li>If a step has a visible result, say what it is, so the reader knows it worked.</li>
+  </ol>
+
+  <p>Two things that should be read against each other go in <code>div class="cols"</code>:</p>
+
+  <div class="cols">
+    <div>
+      <h4>Before</h4>
+      <p>The left column. Each column holds any blocks: text, code, a small figure.</p>
+    </div>
+    <div>
+      <h4>After</h4>
+      <p>The right column. Keep the two the same kind of thing, or the comparison is lost.</p>
+    </div>
+  </div>
+</section>
+
+<section class="chapter" id="back-matter">
+  <h2><span class="num">Chapter 4</span> Back matter</h2>
+
+  <h3 id="answers">Answers</h3>
+  <p>Answers to the questions asked along the way, each with the reasoning and not only the result.</p>
+
+  <h3 id="glossary">Glossary</h3>
+  <dl class="glossary">
+    <dt>Term</dt>
+    <dd>One plain sentence. Include a glossary only when the guide introduces enough vocabulary to need one.</dd>
+  </dl>
+
+  <h3 id="sources">Sources</h3>
+  <p>A claim that rests on a particular source carries a marker<a class="cite" href="#src-1">1</a> that links to it. The list gives the reader somewhere to go next and shows what the guide was checked against.</p>
+
+  <ol class="sources">
+    <li id="src-1">Author or organisation, <em>Title of the page or paper</em>, date or version. <a href="https://example.com/docs">https://example.com/docs</a></li>
+  </ol>
+</section>
+
+</body>
+</html>

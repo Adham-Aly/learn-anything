@@ -1,0 +1,774 @@
+/*
+ * learn-anything: print stylesheet for guides.
+ * Every component is shown, with the markup that produces it, in template.html.
+ */
+
+/* Static font files rather than variable ones, so the PDF embeds real fonts. */
+@import url('https://cdn.jsdelivr.net/npm/@fontsource/source-serif-4@5.3.1/400.css');
+@import url('https://cdn.jsdelivr.net/npm/@fontsource/source-serif-4@5.3.1/400-italic.css');
+@import url('https://cdn.jsdelivr.net/npm/@fontsource/source-serif-4@5.3.1/600.css');
+@import url('https://cdn.jsdelivr.net/npm/@fontsource/source-serif-4@5.3.1/600-italic.css');
+@import url('https://cdn.jsdelivr.net/npm/@fontsource/inter@5.3.0/400.css');
+@import url('https://cdn.jsdelivr.net/npm/@fontsource/inter@5.3.0/400-italic.css');
+@import url('https://cdn.jsdelivr.net/npm/@fontsource/inter@5.3.0/500.css');
+@import url('https://cdn.jsdelivr.net/npm/@fontsource/inter@5.3.0/600.css');
+@import url('https://cdn.jsdelivr.net/npm/@fontsource/inter@5.3.0/700.css');
+@import url('https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.3.0/400.css');
+@import url('https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.3.0/400-italic.css');
+@import url('https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.3.0/500.css');
+@import url('https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.3.0/700.css');
+
+:root {
+  /* Page geometry. A4 unless <html data-paper="letter">. */
+  --page-width: 210mm;
+  --page-height: 297mm;
+  --page-margin-top: 24mm;
+  --page-margin-x: 30mm;
+  --page-margin-bottom: 26mm;
+  --page-content-width: calc(var(--page-width) - 2 * var(--page-margin-x));
+
+  --serif: 'Source Serif 4', 'Iowan Old Style', Charter, Cambria, Georgia, serif;
+  --sans: Inter, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+
+  --ink: #1d1c1a;
+  --ink-2: #57544e;
+  --ink-3: #8c8880;
+  --line: #dedad2;
+  --wash: #f6f4ef;
+  --wash-2: #ece9e1;
+  --warn: #a8570a;
+  --warn-wash: #fcf4e8;
+
+  /* One accent per guide. <html data-accent="teal | plum | forest | slate"> swaps it. */
+  --accent: #2a4bbf;
+  --accent-wash: color-mix(in srgb, var(--accent) 7%, white);
+  --accent-soft: color-mix(in srgb, var(--accent) 40%, white);
+}
+
+:root[data-paper='letter'] {
+  --page-width: 8.5in;
+  --page-height: 11in;
+}
+
+:root[data-accent='teal'] { --accent: #0b6e6e; }
+:root[data-accent='plum'] { --accent: #7a2e7a; }
+:root[data-accent='forest'] { --accent: #2c6b3f; }
+:root[data-accent='slate'] { --accent: #3d4a5c; }
+
+@page {
+  size: var(--page-width) var(--page-height);
+  margin: var(--page-margin-top) var(--page-margin-x) var(--page-margin-bottom);
+
+  @bottom-left {
+    content: var(--running-title, '');
+    font: 500 7.5pt/1 var(--sans);
+    letter-spacing: 0.02em;
+    color: var(--ink-3);
+    vertical-align: top;
+    padding-top: 10mm;
+  }
+
+  @bottom-right {
+    content: counter(page);
+    font: 500 8.5pt/1 var(--sans);
+    color: var(--ink-2);
+    vertical-align: top;
+    padding-top: 10mm;
+  }
+}
+
+@page :first {
+  @bottom-left { content: none; }
+  @bottom-right { content: none; }
+}
+
+/* ---------- Base ---------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 11pt;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+body {
+  margin: 0;
+  font-family: var(--serif);
+  line-height: 1.5;
+  color: var(--ink);
+  overflow-wrap: break-word;
+  text-rendering: optimizeLegibility;
+}
+
+@media screen {
+  body {
+    width: var(--page-content-width);
+    margin: 16mm auto;
+  }
+}
+
+p {
+  margin: 0 0 0.75em;
+  orphans: 2;
+  widows: 2;
+  text-wrap: pretty;
+}
+
+ul,
+ol {
+  margin: 0 0 0.75em;
+  padding-left: 1.5em;
+}
+
+li {
+  margin-bottom: 0.3em;
+}
+
+li > ul,
+li > ol {
+  margin-top: 0.3em;
+}
+
+li::marker {
+  color: var(--ink-3);
+}
+
+strong,
+b,
+dfn {
+  font-weight: 600;
+  font-style: normal;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-color: var(--accent-soft);
+  text-decoration-thickness: 0.5pt;
+  text-underline-offset: 2pt;
+}
+
+hr {
+  border: 0;
+  border-top: 0.6pt solid var(--line);
+  margin: 7mm 0;
+}
+
+blockquote {
+  margin: 5mm 0;
+  padding-left: 4.5mm;
+  border-left: 2pt solid var(--line);
+  color: var(--ink-2);
+  font-style: italic;
+}
+
+kbd {
+  font: 500 0.82em var(--sans);
+  padding: 0.1em 0.4em;
+  border: 0.6pt solid var(--ink-3);
+  border-bottom-width: 1.4pt;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+/* ---------- Headings ---------- */
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--sans);
+  break-after: avoid;
+  text-wrap: balance;
+}
+
+h2 {
+  margin: 0 0 6mm;
+  font-size: 22pt;
+  font-weight: 700;
+  line-height: 1.14;
+  letter-spacing: -0.018em;
+}
+
+h3 {
+  margin: 8mm 0 2.5mm;
+  font-size: 13.5pt;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.008em;
+}
+
+h4 {
+  margin: 5mm 0 1.5mm;
+  font-size: 10.5pt;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+/* The label in front of a heading: "Chapter 3", "3.2", "Step 4". */
+.num {
+  color: var(--accent);
+  margin-right: 0.45em;
+  font-variant-numeric: tabular-nums;
+}
+
+h2 .num {
+  display: block;
+  margin: 0 0 3mm;
+  font-size: 8.5pt;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* A chapter starts a new page. <body class="continuous"> lets short guides run on. */
+.chapter {
+  break-before: page;
+}
+
+.continuous .chapter {
+  break-before: auto;
+  margin-top: 15mm;
+}
+
+.lede {
+  margin: -2mm 0 7mm;
+  font-size: 12.5pt;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+
+/* ---------- Cover ---------- */
+
+.cover {
+  display: flex;
+  flex-direction: column;
+  height: calc(var(--page-height) - var(--page-margin-top) - var(--page-margin-bottom) - 1mm);
+  break-after: page;
+}
+
+.cover::before {
+  content: '';
+  width: 14mm;
+  height: 2.4pt;
+  margin-top: 30mm;
+  background: var(--accent);
+}
+
+.cover .kicker {
+  margin: 6mm 0 0;
+  font: 600 8.5pt/1 var(--sans);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.cover h1 {
+  margin: 9mm 0 0;
+  font-size: 37pt;
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.026em;
+}
+
+.cover .subtitle {
+  max-width: 128mm;
+  margin: 7mm 0 0;
+  font-size: 14.5pt;
+  line-height: 1.4;
+  color: var(--ink-2);
+}
+
+.cover .meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5mm 10mm;
+  margin: auto 0 0;
+  padding-top: 5mm;
+  border-top: 0.6pt solid var(--line);
+}
+
+.cover .meta dt {
+  margin-bottom: 1.2mm;
+  font: 600 7pt/1.2 var(--sans);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.cover .meta dd {
+  margin: 0;
+  font: 9.5pt/1.42 var(--sans);
+}
+
+/* ---------- Contents ---------- */
+
+.toc {
+  break-after: page;
+}
+
+.continuous .toc {
+  break-after: auto;
+}
+
+.toc h2 {
+  font-size: 15pt;
+  margin-bottom: 3mm;
+}
+
+.toc ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.toc li {
+  display: grid;
+  grid-template-columns: 9mm 1fr 10mm;
+  margin: 0;
+  padding: 2.7mm 0;
+  border-bottom: 0.5pt solid var(--line);
+  break-inside: avoid;
+}
+
+.toc .n {
+  grid-area: 1 / 1;
+  font: 600 9.5pt/1.45 var(--sans);
+  color: var(--accent);
+}
+
+.toc a {
+  grid-area: 1 / 2;
+  font: 600 10.5pt/1.3 var(--sans);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.toc .about {
+  grid-area: 2 / 2;
+  margin-top: 0.7mm;
+  font-size: 9.5pt;
+  line-height: 1.4;
+  color: var(--ink-2);
+}
+
+/* Filled in by render-pdf.mjs. */
+.toc .page {
+  grid-area: 1 / 3;
+  font: 500 9pt/1.5 var(--sans);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--ink-2);
+}
+
+/* ---------- Callouts ---------- */
+
+.callout {
+  margin: 5mm 0;
+  padding: 3.4mm 4.6mm 3.6mm;
+  border-left: 2.5pt solid var(--ink-3);
+  border-radius: 0 3px 3px 0;
+  background: var(--wash);
+  font-size: 0.95em;
+  break-inside: avoid;
+}
+
+.callout::before {
+  content: attr(data-label);
+  display: block;
+  margin-bottom: 1.7mm;
+  font: 600 7.5pt/1.2 var(--sans);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.callout:not([data-label])::before { content: none; }
+.callout.key:not([data-label])::before { content: 'Key idea'; }
+.callout.note:not([data-label])::before { content: 'Note'; }
+.callout.warn:not([data-label])::before { content: 'Common mistake'; }
+.callout.deeper:not([data-label])::before { content: 'Going deeper'; }
+.callout.try:not([data-label])::before { content: 'Try it'; }
+
+.callout > :last-child {
+  margin-bottom: 0;
+}
+
+.callout.key {
+  border-left-color: var(--accent);
+  background: var(--accent-wash);
+}
+
+.callout.warn {
+  border-left-color: var(--warn);
+  background: var(--warn-wash);
+}
+
+.callout.deeper,
+.callout.try {
+  padding-left: 4.2mm;
+  border: 0.7pt solid var(--line);
+  border-radius: 3px;
+  background: none;
+}
+
+.callout.try {
+  border-color: var(--accent-soft);
+}
+
+.callout.key::before,
+.callout.try::before {
+  color: var(--accent);
+}
+
+.callout.warn::before {
+  color: var(--warn);
+}
+
+.callout pre,
+.callout :not(pre) > code {
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+}
+
+/* ---------- Code ---------- */
+
+code {
+  font-family: var(--mono);
+  font-size: 0.85em;
+  padding: 0.1em 0.32em;
+  border-radius: 3px;
+  background: var(--wash);
+}
+
+h2 code,
+h3 code,
+h4 code {
+  font-size: 0.9em;
+  background: none;
+  padding: 0;
+}
+
+pre {
+  margin: 4mm 0;
+  padding: 3mm 3.8mm;
+  border: 0.5pt solid var(--line);
+  border-radius: 3px;
+  background: var(--wash);
+  font: 8.6pt/1.5 var(--mono);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  tab-size: 2;
+  orphans: 3;
+  widows: 3;
+}
+
+pre code {
+  font: inherit;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+}
+
+/* A code block with a filename (or other caption) above it. */
+figure.code {
+  margin: 4mm 0;
+  break-inside: auto;
+}
+
+figure.code figcaption {
+  margin: 0;
+  padding: 1.5mm 3.8mm;
+  border: 0.5pt solid var(--line);
+  border-bottom: 0;
+  border-radius: 3px 3px 0 0;
+  background: var(--wash-2);
+  font: 500 7.5pt/1.3 var(--mono);
+  text-align: left;
+  color: var(--ink-2);
+  break-after: avoid;
+}
+
+figure.code pre {
+  margin: 0;
+  border-radius: 0 0 3px 3px;
+}
+
+/* Lines wrapped in <mark> in the source: "this is what changed". */
+pre .line {
+  display: block;
+}
+
+/* Opaque, and overlapping the next line by a hair, so a run of marked lines has no seams. */
+pre .line.marked {
+  margin: 0 -3.8mm -0.6px;
+  padding: 0 3.8mm 0.6px calc(3.8mm - 2pt);
+  border-left: 2pt solid var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, var(--wash));
+}
+
+pre.terminal .prompt {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+pre.terminal .command {
+  font-weight: 500;
+}
+
+pre.terminal .output {
+  color: var(--ink-2);
+}
+
+.hljs-comment,
+.hljs-quote,
+.hljs-meta {
+  color: #85817a;
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-name,
+.hljs-doctag {
+  color: #7a3a9a;
+}
+
+.hljs-string,
+.hljs-regexp,
+.hljs-addition {
+  color: #2a6a3c;
+}
+
+.hljs-number,
+.hljs-literal,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-deletion {
+  color: #a04e08;
+}
+
+.hljs-title,
+.hljs-section,
+.hljs-attr,
+.hljs-attribute,
+.hljs-selector-id,
+.hljs-selector-class {
+  color: #1f55b0;
+}
+
+.hljs-type,
+.hljs-built_in,
+.hljs-template-variable,
+.hljs-variable.language_ {
+  color: #0b6a6a;
+}
+
+.hljs-emphasis { font-style: italic; }
+.hljs-strong { font-weight: 700; }
+
+/* ---------- Figures and diagrams ---------- */
+
+figure {
+  margin: 6mm 0;
+  break-inside: avoid;
+}
+
+figure > svg,
+figure > img,
+.mermaid > svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+figcaption {
+  margin-top: 2.6mm;
+  font: 8.5pt/1.4 var(--sans);
+  text-align: center;
+  text-wrap: balance;
+  color: var(--ink-2);
+}
+
+figcaption b {
+  color: var(--ink);
+}
+
+pre.mermaid {
+  border: 0;
+  background: none;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+}
+
+/* Hand-drawn SVG picks up the guide's type and colours through these classes. */
+figure svg {
+  font-family: var(--sans);
+  font-size: 12px;
+}
+
+figure svg text { fill: var(--ink); }
+svg .d-box { fill: var(--wash); stroke: var(--ink-2); stroke-width: 1.2; }
+svg .d-line { fill: none; stroke: var(--ink-2); stroke-width: 1.2; }
+svg .d-fill { fill: var(--ink-2); stroke: none; }
+svg .d-dashed { stroke-dasharray: 4 3; }
+svg .d-box.d-accent { fill: var(--accent-wash); stroke: var(--accent); }
+svg .d-line.d-accent { stroke: var(--accent); }
+svg .d-fill.d-accent,
+svg text.d-accent { fill: var(--accent); }
+svg text.d-muted { fill: var(--ink-3); }
+svg text.d-small { font-size: 10px; }
+svg text.d-strong { font-weight: 600; }
+
+/* ---------- Tables ---------- */
+
+table {
+  width: 100%;
+  margin: 5mm 0;
+  border-collapse: collapse;
+  font: 9pt/1.42 var(--sans);
+  font-variant-numeric: tabular-nums;
+}
+
+caption {
+  caption-side: top;
+  margin-bottom: 2mm;
+  font-size: 8.5pt;
+  text-align: left;
+  color: var(--ink-2);
+}
+
+caption b {
+  color: var(--ink);
+}
+
+thead {
+  display: table-header-group;
+}
+
+tr {
+  break-inside: avoid;
+}
+
+th,
+td {
+  padding: 1.9mm 4mm 1.9mm 0;
+  text-align: left;
+  vertical-align: top;
+}
+
+th:last-child,
+td:last-child {
+  padding-right: 0;
+}
+
+thead th {
+  border-bottom: 1pt solid var(--ink);
+  font-weight: 600;
+  vertical-align: bottom;
+}
+
+tbody th {
+  font-weight: 600;
+}
+
+tbody th,
+td {
+  border-bottom: 0.5pt solid var(--line);
+}
+
+/* ---------- Other building blocks ---------- */
+
+/* Numbered procedure: things the reader does, in order. */
+ol.steps {
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+ol.steps > li {
+  position: relative;
+  margin-bottom: 3.5mm;
+  padding-left: 9mm;
+  counter-increment: step;
+}
+
+ol.steps > li::before {
+  content: counter(step);
+  position: absolute;
+  top: 0.12em;
+  left: 0;
+  width: 5.6mm;
+  height: 5.6mm;
+  border-radius: 50%;
+  background: var(--accent);
+  font: 600 8pt/5.6mm var(--sans);
+  text-align: center;
+  color: white;
+}
+
+/* Two things side by side: before and after, idea and code, option A and option B. */
+.cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6mm;
+  margin: 5mm 0;
+  break-inside: avoid;
+}
+
+.cols > * {
+  min-width: 0;
+}
+
+.cols > * > :first-child { margin-top: 0; }
+.cols > * > :last-child { margin-bottom: 0; }
+
+dl.glossary dt {
+  font: 600 9.5pt/1.4 var(--sans);
+  break-after: avoid;
+}
+
+dl.glossary dd {
+  margin: 0.4mm 0 3mm;
+}
+
+/* A numbered marker pointing into the source list. */
+a.cite {
+  margin-left: 0.12em;
+  font: 600 0.66em/0 var(--sans);
+  vertical-align: super;
+  text-decoration: none;
+}
+
+ol.sources {
+  padding-left: 1.7em;
+  font: 8.8pt/1.45 var(--sans);
+}
+
+ol.sources li {
+  margin-bottom: 1.8mm;
+  break-inside: avoid;
+}
+
+ol.sources a {
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Maths ---------- */
+
+.katex {
+  font-size: 1.06em;
+}
+
+.katex-display {
+  margin: 4mm 0;
+  break-inside: avoid;
+}

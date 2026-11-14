@@ -1,0 +1,5 @@
+.DS_Store
+node_modules/
+
+# Guides produced when the skill is run inside this repository
+/learn-anything/
